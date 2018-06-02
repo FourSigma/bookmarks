@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"net/url"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -27,18 +26,22 @@ type Opt interface {
 
 type LinkId uuid.UUID
 type Link struct {
-	Id   uuid.UUID
-	URL  url.URL //Must be unique
-	Hash string
+	Id   uuid.UUID `json:"id,omitempty"`
+	URL  string    `json:"url,omitempty"` //Must be unique
+	Hash string    `json:"hash,omitempty"`
 	Data struct {
-		Title       string `json:"title"`
-		Type        string `json:"type"`
-		Url         string `json:"url"`
-		Site        string `json:"site"`
+		Title       string `json:"title,omitempty"`
+		Type        string `json:"type,omitempty"`
+		Url         string `json:"url,omitempty"`
+		Site        string `json:"site,omitempty"`
 		SiteName    string `json:"site_name,omitempty"`
-		Description string `json:"description"`
-		Locale      string `json:"locale"`
+		Description string `json:"description,omitempty"`
+		Locale      string `json:"locale,omitempty"`
 		Image       string `json:"image,omitempty"`
-		Content     string `json:"content"`
-	}
+		Content     string `json:"content,omitempty"`
+	} `json:"data,omitempty"`
+}
+
+func (l Link) Valid() error {
+	return nil
 }
