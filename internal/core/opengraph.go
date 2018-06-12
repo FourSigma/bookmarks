@@ -6,26 +6,26 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-type LinkService interface {
-	Create(context.Context, *Link) error
-	Get(context.Context, LinkId) (Link, error)
-	List(context.Context, LinkFilter, ...Opt) ([]Link, error)
-	Update(context.Context, LinkId, *Link) error
-	Delete(context.Context, LinkId) error
+type BookmarkService interface {
+	Create(context.Context, *Bookmark) error
+	Get(context.Context, BookmarkId) (Bookmark, error)
+	List(context.Context, BookmarkFilter, ...Opt) ([]Bookmark, error)
+	Update(context.Context, BookmarkId, *Bookmark) error
+	Delete(context.Context, BookmarkId) error
 
-	GetLinkFromURL(context.Context, string) (Link, error)
+	GetBookmarkFromURL(context.Context, string) (Bookmark, error)
 }
 
-type LinkFilter interface {
-	LinkFilter()
+type BookmarkFilter interface {
+	BookmarkFilter()
 }
 
 type Opt interface {
 	Opt()
 }
 
-type LinkId uuid.UUID
-type Link struct {
+type BookmarkId uuid.UUID
+type Bookmark struct {
 	Id   uuid.UUID `json:"id,omitempty"`
 	URL  string    `json:"url,omitempty"` //Must be unique
 	Hash string    `json:"hash,omitempty"`
@@ -42,6 +42,6 @@ type Link struct {
 	} `json:"data,omitempty"`
 }
 
-func (l Link) Valid() error {
+func (l Bookmark) Valid() error {
 	return nil
 }

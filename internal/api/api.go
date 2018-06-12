@@ -28,8 +28,8 @@ func InitalizeAPIResources(rs ...Resource) (r *chi.Mux) {
 func ListenAndServe(port string) error {
 	//Compose the dependicies
 	apiRoutes := InitalizeAPIResources(
-		NewLinkResource(
-			service.NewLinkService(
+		NewBookmarkResource(
+			service.NewBookmarkService(
 				service.GetDatabaseConnection(),
 				opengraph.NewOGClient(),
 			),

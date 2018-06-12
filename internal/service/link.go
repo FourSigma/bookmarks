@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func NewLinkService(db *sqlx.DB, og opengraph.OGClient) core.LinkService {
+func NewBookmarkService(db *sqlx.DB, og opengraph.OGClient) core.BookmarkService {
 	return linkService{
 		db: db,
 		og: og,
@@ -22,7 +22,7 @@ type linkService struct {
 	og opengraph.OGClient
 }
 
-func (l linkService) Create(ctx context.Context, link *core.Link) (err error) {
+func (l linkService) Create(ctx context.Context, link *core.Bookmark) (err error) {
 	if link.Id, err = uuid.NewV4(); err != nil {
 		return
 	}
@@ -32,36 +32,36 @@ func (l linkService) Create(ctx context.Context, link *core.Link) (err error) {
 
 	return
 }
-func (l linkService) Get(ctx context.Context, id core.LinkId) (link core.Link, err error) {
+func (l linkService) Get(ctx context.Context, id core.BookmarkId) (link core.Bookmark, err error) {
 	if err = l.db.Get(&link, "SELECT * from links WHERE id = $1"); err != nil {
 		return
 	}
 	return
 }
-func (l linkService) List(ctx context.Context, filt core.LinkFilter, opts ...core.Opt) (rs []core.Link, err error) {
+func (l linkService) List(ctx context.Context, filt core.BookmarkFilter, opts ...core.Opt) (rs []core.Bookmark, err error) {
 	return l.list(ctx, filt, opts...)
 }
 
-func (l linkService) list(ctx context.Context, filt core.LinkFilter, opts ...core.Opt) (rs []core.Link, err error) {
+func (l linkService) list(ctx context.Context, filt core.BookmarkFilter, opts ...core.Opt) (rs []core.Bookmark, err error) {
 	if err = l.db.Select(&rs, "SELECT * from links"); err != nil {
 		return
 	}
 	return
 }
 
-func (l linkService) Update(ctx context.Context, id core.LinkId, modified *core.Link) (err error) {
+func (l linkService) Update(ctx context.Context, id core.BookmarkId, modified *core.Bookmark) (err error) {
 	//	if err = l.db.ExecContext(ctx, "UPDATE ", args ...interface{})
 	return
 }
 
-func (l linkService) Delete(ctx context.Context, id core.LinkId) (err error) {
+func (l linkService) Delete(ctx context.Context, id core.BookmarkId) (err error) {
 	if _, err = l.db.ExecContext(ctx, "DELETE FROM links where id = $1", uuid.UUID(id)); err != nil {
 		return
 	}
 	return
 }
 
-func (l linkService) GetLinkFromURL(ctx context.Context, url string) (link core.Link, err error) {
+func (l linkService) GetBookmarkFromURL(ctx context.Context, url string) (link core.Bookmark, err error) {
 	m, err := l.og.OpenGraphMetaData(ctx, url)
 	if err != nil {
 		return
