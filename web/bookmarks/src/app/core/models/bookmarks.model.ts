@@ -18,4 +18,23 @@ export class Bookmark{
         public hash:string,
         public data: Data, 
     ){}
+
+    static fromJSON(json:any): Bookmark{
+        return new Bookmark(
+           json.id,
+           json.url,
+           json.hash,
+           json.data,
+        );
+    }
+
+    public toJSON(): any{
+        return {
+            id: this.id,
+            url: this.url,
+            hash: this.hash,
+            data: this.data,
+        }
+    }
 }
+

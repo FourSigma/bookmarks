@@ -1,5 +1,31 @@
-<div class="grid-container">
+<div class="grid-container" fxLayout="column" fxLayoutAlign="space-evenly stretch">
   <h1 class="mat-h1">Bookmarks</h1>
+
+  <div fxLayout="row" fxLayoutAlign="space-around center"> 
+    <mat-form-field fxFlex="30">
+      <input matInput #input maxlength="1000" placeholder="Enter URL to Preview">
+    </mat-form-field>
+
+    <mat-card class="preview-card" fxFlex="30">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Enter Data</mat-card-title>
+          <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes
+            very well with mountainous terrain, the Shiba Inu was originally bred for hunting. very well with mountainous
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary"> SAVE </button>
+          <button mat-raised-button color="warn"> CLEAR </button>
+        </mat-card-actions>
+   </mat-card>
+
+  </div>
+
   <div fxLayout="row wrap" fxLayoutAlign="space-around center">
     <div *ngFor="let card of cards" fxLayoutGap="10px">
       <mat-card class="example-card">

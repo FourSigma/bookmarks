@@ -8,6 +8,7 @@ import (
 	"github.com/FourSigma/bookmarks/pkg/opengraph"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 )
 
 type Resource interface {
@@ -17,6 +18,11 @@ type Resource interface {
 func InitalizeAPIResources(rs ...Resource) (r *chi.Mux) {
 	r = chi.NewRouter()
 	r.Use(middleware.Recoverer)
+	cors := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+	})
+
+	r.Use(cors.Handler)
 
 	for _, v := range rs {
 		v.Routes(r)

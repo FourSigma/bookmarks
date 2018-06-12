@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import * as models from '../models';
+import { map, switchMap } from 'rxjs/operators';
 
-const URLGetBookmarks = 'http://localhost:4040/bookmarks';
+const BaseURL = 'http://localhost:8080/v0';
 const HttpOpts = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -15,7 +16,16 @@ const HttpOpts = {
 export class BookmarkService {
     constructor(private http: HttpClient) { }
 
-    getBookmarks(): Observable<any> {
-        return this.http.get<any>(URLGetBookmarks, HttpOpts);
+    list(): Observable<models.Bookmark[]> {
+        return this.http.get<models.Bookmark[]>(`${BaseURL}/bookmarks`, HttpOpts).pipe(
+            map(resp => resp.map((item) =>models.Bookmark.fromJSON(resp))),
+        );
+    }
+
+    preview(url:string): Observable<models.Bookmark> {
+        return this.http.get<models.Bookmark[]>(`${BaseURL}/bookmarks?preview=${url}`, HttpOpts).pipe(
+            map(resp => models.Bookmark.fromJSON(resp)),
+        );
     }
 }
+
