@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { BookmarkService } from '../core/service';
-import { Bookmark } from '../core/models';
+import { BookmarkService } from '../../core/service';
+import { Bookmark } from '../../core/models';
 import { Observable, Subscription} from 'rxjs';
 
 @Component({
-  selector: 'dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'preview',
+  templateUrl: './preview.component.html',
+  styleUrls: ['./preview.component.css']
 })
-export class DashboardComponent implements OnInit{
+export class PreviewComponent implements OnInit{
 
   constructor(public bookmark: BookmarkService){}
-
   ngOnInit():void{
 
   }

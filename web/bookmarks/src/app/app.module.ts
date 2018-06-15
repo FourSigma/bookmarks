@@ -5,20 +5,20 @@ import { AppComponent } from './app.component';
 
 import { CoreModule } from './core';
 import { SharedModule } from './shared';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent
   ],
   imports: [
     BrowserModule,
     FlexLayoutModule,
     SharedModule,
-    CoreModule
+    CoreModule,
+    DashboardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
