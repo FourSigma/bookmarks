@@ -1,8 +1,0 @@
-.grid-container {
-  margin: 150px;
-}
-
-mat-card {
-    width: calc(100% - 70px);
-    height: calc(100% - 70px);
-}

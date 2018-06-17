@@ -2,9 +2,11 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/FourSigma/bookmarks/internal/core"
+	"github.com/FourSigma/bookmarks/pkg/opengraph"
 	"github.com/go-chi/chi"
 	uuid "github.com/satori/go.uuid"
 )
@@ -49,8 +51,10 @@ func (a bookmarkResource) Create(rw http.ResponseWriter, r *http.Request) {
 	//Check if bookmark is valid here
 	if err := a.bookmark.Create(r.Context(), l); err != nil {
 		http.Error(rw, "error creating bookmark", http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
+	a.Respond(rw, http.StatusOK, l)
 
 }
 
@@ -68,7 +72,7 @@ func (a bookmarkResource) Update(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "error trying to update bookmark", http.StatusInternalServerError)
 		return
 	}
-
+	a.Respond(rw, http.StatusOK, l)
 }
 
 func (a bookmarkResource) Delete(rw http.ResponseWriter, r *http.Request) {
@@ -103,7 +107,7 @@ func (a bookmarkResource) List(rw http.ResponseWriter, r *http.Request) {
 
 	var rs []core.Bookmark
 	var err error
-	if rs, err = a.bookmark.List(r.Context(), nil); err != nil {
+	if rs, err = a.bookmark.List(r.Context(), core.FilterBookmarksAll{}); err != nil {
 		http.Error(rw, "error trying to list", http.StatusInternalServerError)
 		return
 	}
@@ -114,7 +118,12 @@ func (a bookmarkResource) List(rw http.ResponseWriter, r *http.Request) {
 func (a bookmarkResource) Preview(rw http.ResponseWriter, r *http.Request, url string) {
 	l, err := a.bookmark.GetBookmarkFromURL(r.Context(), url)
 	if err != nil {
-		http.Error(rw, "error trying to get OG data from url", http.StatusInternalServerError)
+		switch t := err.(type) {
+		case opengraph.ErrorOgClient:
+			http.Error(rw, t.Error(), t.Code)
+		default:
+			http.Error(rw, "error trying to get OG data from url", http.StatusInternalServerError)
+		}
 		return
 	}
 	a.Respond(rw, http.StatusOK, l)

@@ -1,20 +1,10 @@
-<div>
-    <div *ngFor="let card of cards">
-      <mat-card class="example-card">
-        <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Shiba Inu</mat-card-title>
-          <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>
-            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes
-            very well with mountainous terrain, the Shiba Inu was originally bred for hunting. very well with mountainous
-          </p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button>LINK</button>
-        </mat-card-actions>
-      </mat-card>
+<div class="card-columns">
+      <div class="card preview-card" *ngFor="let bookmark of (list$ | async)">
+          <img class="card-img-top" src="{{bookmark.data.image}}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ bookmark.data.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ bookmark.data.site }}</h6>
+            <p class="card-text">{{ bookmark.data.description }}</p>
+          </div>
+      </div>
 </div>
-

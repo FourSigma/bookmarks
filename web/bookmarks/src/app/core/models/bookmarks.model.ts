@@ -13,17 +13,19 @@ export interface Data{
 
 export class Bookmark{
     constructor(
-        public id:string,
-        public url:string,
-        public hash:string,
-        public data: Data, 
+        public id?:string,
+        public url?:string,
+        public data?: Data, 
     ){}
+
+    isEmpty(): boolean{
+        return this.url == '' || this.data == null || this.data == undefined;
+    }
 
     static fromJSON(json:any): Bookmark{
         return new Bookmark(
            json.id,
            json.url,
-           json.hash,
            json.data,
         );
     }
@@ -32,7 +34,6 @@ export class Bookmark{
         return {
             id: this.id,
             url: this.url,
-            hash: this.hash,
             data: this.data,
         }
     }

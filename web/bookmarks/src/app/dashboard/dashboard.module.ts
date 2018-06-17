@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard.component';
 import { PreviewComponent} from './preview/preview.component';
 import { CardComponent } from './card/card.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CommonModule,
     FlexLayoutModule,
     SharedModule,
+    NgbModule.forRoot(),
   ],
   providers: [],
   exports: [ 

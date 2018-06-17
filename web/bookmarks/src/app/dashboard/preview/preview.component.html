@@ -1,18 +1,44 @@
+<h1> Bookmarks</h1>
+<div class="card welcome-card">
+    <div class="card-body">
+      <h5 class="card-title">Welcome!</h5>
+      <p class="card-text">Booksmarks -- extracts the OpenGraph metadata from html links. </p>
+      <button class="btn btn-primary mb-2 mr-2" (click)="openLg(content)">Create New Bookmark</button>
+    </div>
+</div>
 
-    <mat-card class="preview-card">
-        <mat-card-header>
-          <mat-card-title>Preview</mat-card-title>
-          <mat-card-subtitle>Enter URL to preview card</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-    <mat-form-field>
-      <input matInput #input maxlength="1000" placeholder="URL">
-    </mat-form-field>
-
-
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary"> SAVE </button>
-          <button mat-raised-button color="warn"> CLEAR </button>
-        </mat-card-actions>
-   </mat-card>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Bookmark Preview</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Link</span>
+          </div>
+          <input 
+          type="text" 
+          [formControl] = "formURL"
+          class="form-control" placeholder="OpenGraph compatible URL" aria-label="URL" aria-describedby="basic-addon1">
+        </div>
+    </div>
+    <div *ngIf="(bookmark$ | async) as bookmark; else loadingOrError">
+      <div class="card preview-card" *ngIf="!bookmark.isEmpty()">
+          <img class="card-img-top" src="{{bookmark.data.image}}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ bookmark.data.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ bookmark.data.site }}</h6>
+            <p class="card-text">{{ bookmark.data.description }}</p>
+            <button class="btn btn-primary mb-2 mr-2" (click)="save(bookmark)">Save</button>
+            <button class="btn btn-warn mb-2 mr-2" (click)="clear()">Clear</button>
+          </div>
+      </div>
+    </div>
+  
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>
