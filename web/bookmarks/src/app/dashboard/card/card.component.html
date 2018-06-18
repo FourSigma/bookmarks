@@ -1,10 +1,10 @@
 <div class="card-columns">
-      <div class="card preview-card" *ngFor="let bookmark of (list$ | async)">
-          <img class="card-img-top" src="{{bookmark.data.image}}" alt="Card image cap">
+      <div class="card preview-card" *ngFor="let bookmark of list">
+          <img class="card-img-top" src="{{bookmark.data.image}}" alt="Card deck of bookmarks.">
           <div class="card-body">
             <h5 class="card-title">{{ bookmark.data.title }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">{{ bookmark.data.site }}</h6>
             <p class="card-text">{{ bookmark.data.description }}</p>
-          </div>
+            <a href="{{bookmark.data.url}}" class="btn btn-light" target="_blank">Open</a>
       </div>
 </div>

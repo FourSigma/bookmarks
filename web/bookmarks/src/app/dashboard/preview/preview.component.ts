@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BookmarkService } from '../../core/service';
 import { Bookmark } from '../../core/models';
 import { Observable, Subscription,of, empty, never, } from 'rxjs';
@@ -34,7 +34,6 @@ export class PreviewComponent implements OnInit{
   }
 
   ngOnDestroy(){
-    empty()
   }
   private clear():void{
     this.formURL.setValue('');
@@ -63,11 +62,18 @@ export class PreviewComponent implements OnInit{
     );
   }
 
+
+  @Output() bookmarkCreated: EventEmitter<Bookmark> = new EventEmitter<Bookmark>();
   save(bm:Bookmark){
     this.bookmark.create(bm).subscribe(
-      resp => console.log("Bookmark created: ", resp)
+      resp => {
+        this.bookmarkCreated.emit(resp);
+        console.log("Bookmark created: ", resp)
+      },
     )
   }
+
+
   openLg(content) {
    this.modalRef = this.modal.open(content, { size: 'lg' });
    this.modalRef.result.then(()=>this.formURL.setValue(''),()=>this.formURL.setValue(''))

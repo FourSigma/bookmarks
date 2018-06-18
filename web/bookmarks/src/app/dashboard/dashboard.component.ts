@@ -1,31 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { BookmarkService } from '../core/service';
 import { Bookmark } from '../core/models';
-import { Observable, Subscription} from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 
-  constructor(public bookmark: BookmarkService){}
+  constructor(public bookmark: BookmarkService) { }
 
-  ngOnInit():void{
+  public list: Bookmark[] = [];
 
+  ngOnInit(): void {
+    this.getBookmarks();
   }
 
-  private sub: Subscription;
-  private pBookmark:Bookmark;
-  private pError: string;
-  preview(url:string): Observable<Bookmark>{
-    return this.bookmark.preview('https://www.popsci.com/forever-man-immortality-science');
-    // return this.bookmark.preview('https://www.popsci.com/forever-man-immortality-science').subscribe(
-    //   (bls: Bookmark) => return bls,
-    //   (err) => console.log(err),
-    // );
-
+  getBookmarks(): void {
+    this.bookmark.list().subscribe(
+      (resp: Bookmark[]) => this.list = resp.reverse(),
+    );
   }
 
+  refresh() {
+    this.getBookmarks();
+  }
+
+  addBookmark(b: Bookmark) {
+    console.log("addBookmark", b);
+    this.list.push(b);
+  }
 }

@@ -1,4 +1,4 @@
-  <div class="grid-container">
-      <preview></preview>
-      <card></card>
+  <div class="grid-container" >
+      <preview (bookmarkCreated)="refresh()"></preview>
+      <card [list]="list"></card>
   </div>

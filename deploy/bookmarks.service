@@ -1,0 +1,18 @@
+[Unit]
+Description=Bookmarks Server (bookmarkd)
+Documentation=https://github.com/FourSigma/bookmarks
+
+[Service]
+Type=simple
+Restart=always
+User=siva
+ExecStart=/opt/bookmarks.foursigma.io/bookmarkd
+WorkingDirectory=/opt/bookmarks.foursigma.io
+Environment=PORT=8080
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+Alias=bookmarks.service

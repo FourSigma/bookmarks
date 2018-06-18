@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BookmarkService } from '../../core/service';
 import { Bookmark } from '../../core/models';
-import { Observable, Subscription} from 'rxjs';
+import { Observable, Subject} from 'rxjs';
 import { switchMap, catchError} from 'rxjs/operators';
 
 @Component({
@@ -11,11 +11,13 @@ import { switchMap, catchError} from 'rxjs/operators';
 })
 export class CardComponent implements OnInit{
 
-  constructor(public bookmark: BookmarkService){}
+  constructor(){}
 
-  private list$: Observable<Bookmark[]>;
-  ngOnInit():void{
-    this.list$ = this.bookmark.list()
-  }
+  private bookmark$: Subject<Bookmark[]> = new Subject<Bookmark[]>();
+
+  @Input() list:Bookmark[] = [];
+
+  ngOnInit():void{}
+
 
 }
