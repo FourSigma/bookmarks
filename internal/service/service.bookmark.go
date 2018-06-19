@@ -9,22 +9,27 @@ import (
 	"database/sql"
 
 	"github.com/FourSigma/bookmarks/internal/core"
+	"github.com/FourSigma/bookmarks/internal/service/nats"
 	"github.com/FourSigma/bookmarks/pkg/opengraph"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 )
 
+const SubjectBookmarkCreated = "bookmarks.event.create"
+
 func NewBookmarkService(db *sqlx.DB, og opengraph.OGClient) core.BookmarkService {
 	return bookmarkService{
-		db: db,
-		og: og,
+		db:     db,
+		og:     og,
+		notify: nats.NewNATSNotifier(SubjectBookmarkCreated, nats.NewNATSConnection("publisher")),
 	}
 }
 
 type bookmarkService struct {
-	db *sqlx.DB
-	og opengraph.OGClient
+	db     *sqlx.DB
+	og     opengraph.OGClient
+	notify Notifier
 }
 
 func (l bookmarkService) Create(ctx context.Context, bookmark *core.Bookmark) (err error) {
@@ -36,6 +41,7 @@ func (l bookmarkService) Create(ctx context.Context, bookmark *core.Bookmark) (e
 		return
 	}
 
+	l.notify.Notify(ctx, bookmark)
 	return
 }
 func (l bookmarkService) Get(ctx context.Context, id core.BookmarkId) (bookmark core.Bookmark, err error) {

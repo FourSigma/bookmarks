@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"github.com/FourSigma/bookmarks/pkg/log"
 	"github.com/jmoiron/sqlx"
 )
@@ -12,4 +14,18 @@ func GetDatabaseConnection() *sqlx.DB {
 	}
 	log.Infoln("Connected to PostgreSQL database: bookmarks")
 	return db
+}
+
+type Notifier interface {
+	Notify(context.Context, interface{})
+}
+
+func NewDummyNotifier() Notifier {
+	return dummyNotify{}
+}
+
+type dummyNotify struct{}
+
+func (d dummyNotify) Notify(context.Context, interface{}) {
+	return
 }
