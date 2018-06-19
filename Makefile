@@ -11,8 +11,11 @@ js:
 clean:
 	go clean
 	rm ./bookmarkd
-sync: 
+
+sync-js: 
 	rsync -r -a -v -e ssh --delete ./web/bookmarks/dist/bookmarks/ siva@foursigma.io:/var/www/bookmarks.foursigma.io/ 
+
+sync: sync-js 
 	scp  ./deploy/bookmarks.service siva@foursigma.io:/home/siva/bookmarks.service  
 	ssh -t siva@foursigma.io rm /opt/bookmarks.foursigma.io/bookmarkd 
 	scp  ./bookmarkd siva@foursigma.io:/opt/bookmarks.foursigma.io/  

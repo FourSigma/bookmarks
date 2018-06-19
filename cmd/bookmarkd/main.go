@@ -5,33 +5,54 @@ import (
 
 	"github.com/FourSigma/bookmarks/internal/api"
 	"github.com/FourSigma/bookmarks/internal/service"
+	"github.com/FourSigma/bookmarks/internal/service/nats"
+	"github.com/FourSigma/bookmarks/internal/service/nats/slack"
 	"github.com/FourSigma/bookmarks/internal/service/nats/webhook"
 	"github.com/FourSigma/bookmarks/pkg/log"
-	"github.com/nats-io/go-nats-streaming"
 )
 
 func main() {
 
 	/***********************************
-	   Init Webhook consumer Go routine
+	   Webhook consumer Go routine
 	************************************/
-	consumerWebhook, err := stan.Connect("foursigma-cluster", "consumer-webhook")
+
+	wsc, err := nats.Subscribe(
+		//Topic/Subject
+		service.SubjectBookmarkCreated,
+
+		//Handler
+		webhook.Handler(http.DefaultClient, "https://webhook.site/dba8491d-84e3-4ca5-b25a-6a75cc1ecfe7"),
+
+		"webhook",
+	)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer wsc.Close()
 
-	if _, err := consumerWebhook.Subscribe(
-		service.SubjectBookmarkCreated, // bookmarks.events.create
-		webhook.Handler(http.DefaultClient,
-			"https://webhook.site/dba8491d-84e3-4ca5-b25a-6a75cc1ecfe7",
-		), //Function closure func(*stan.Msg)
-		stan.DurableName("webhook"), //Keeps track of the last consumed message offset by consumer
-	); err != nil {
+	/***********************************
+	   Slack consumer Go routine
+	************************************/
+
+	ssc, err := nats.Subscribe(
+
+		service.SubjectBookmarkCreated,
+
+		slack.Handler(
+			"xoxp-383722694805-383353771476-384357707187-8b960ae744b38408fd18790d4872caba",
+			"bookmarks",
+		),
+
+		"slack",
+	)
+	if err != nil {
 		log.Fatalln(err)
 	}
+	defer ssc.Close()
 
 	/***********************************
 	  API Server Go routine
 	************************************/
-	log.Fatalln(api.ListenAndServe("8080"))
+	log.Errorln(api.ListenAndServe("8080"))
 }

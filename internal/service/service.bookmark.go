@@ -44,12 +44,14 @@ func (l bookmarkService) Create(ctx context.Context, bookmark *core.Bookmark) (e
 	l.notify.Notify(ctx, bookmark)
 	return
 }
+
 func (l bookmarkService) Get(ctx context.Context, id core.BookmarkId) (bookmark core.Bookmark, err error) {
 	if err = l.db.Get(&bookmark, "SELECT * from bookmarks WHERE id = $1"); err != nil {
 		return
 	}
 	return
 }
+
 func (l bookmarkService) List(ctx context.Context, filt core.BookmarkFilter, opts ...core.Opt) (rs []core.Bookmark, err error) {
 	return l.list(ctx, filt, opts...)
 }

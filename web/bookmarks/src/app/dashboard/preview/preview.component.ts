@@ -1,53 +1,52 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BookmarkService } from '../../core/service';
 import { Bookmark } from '../../core/models';
-import { Observable, Subscription,of, empty, never, } from 'rxjs';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subscription, of, empty, never, } from 'rxjs';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged,map, switchMap, shareReplay, catchError} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap, shareReplay, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'preview',
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
-export class PreviewComponent implements OnInit{
+export class PreviewComponent implements OnInit {
 
   private formURL = new FormControl();
   private modalRef: NgbModalRef;
-  private bookmark$:Observable<Bookmark>;
+  private bookmark$: Observable<Bookmark>;
   private sub: Subscription;
 
-  constructor(public bookmark: BookmarkService, private modal: NgbModal){}
+  @Output() bookmarkCreated: EventEmitter<Bookmark> = new EventEmitter<Bookmark>();
 
-  ngOnInit():void{
-    this.bookmark$= this.formURL.valueChanges.pipe(
+  constructor(public bookmark: BookmarkService, private modal: NgbModal) { }
+
+  ngOnInit(): void {
+    this.bookmark$ = this.formURL.valueChanges.pipe(
       debounceTime(100),
       distinctUntilChanged(),
-      switchMap((url:string) => {
-        if (!url || url === ''){
-          return of(new Bookmark())
+      switchMap((url: string) => {
+        if (!url || url === '') {
+          return of(new Bookmark());
         }
-        return this.preview(url)
+        return this.preview(url);
       }),
-    ); 
+    );
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
   }
-  private clear():void{
+  private clear(): void {
     this.formURL.setValue('');
   }
-  private handleError<T> (operation = 'operation', result?: T) {
+  private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-   
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
-   
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
       this.log(error);
-   
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
@@ -56,30 +55,30 @@ export class PreviewComponent implements OnInit{
   private pError: string;
 
 
-  preview(url:string): Observable<Bookmark>{
+  preview(url: string): Observable<Bookmark> {
     return this.bookmark.preview(url).pipe(
-      catchError(this.handleError<Bookmark>("PREVIEW::")),
+      catchError(this.handleError<Bookmark>('PREVIEW::')),
     );
   }
 
 
-  @Output() bookmarkCreated: EventEmitter<Bookmark> = new EventEmitter<Bookmark>();
-  save(bm:Bookmark){
+  save(bm: Bookmark) {
     this.bookmark.create(bm).subscribe(
       resp => {
         this.bookmarkCreated.emit(resp);
-        console.log("Bookmark created: ", resp)
+        console.log('Bookmark created: ', resp);
+        this.modalRef.dismiss();
       },
     )
   }
 
 
   openLg(content) {
-   this.modalRef = this.modal.open(content, { size: 'lg' });
-   this.modalRef.result.then(()=>this.formURL.setValue(''),()=>this.formURL.setValue(''))
+    this.modalRef = this.modal.open(content, { size: 'lg' });
+    this.modalRef.result.then(() => this.formURL.setValue(''), () => this.formURL.setValue(''))
   }
 
-  log(msg:any){
+  log(msg: any) {
     console.log(msg);
   }
 
