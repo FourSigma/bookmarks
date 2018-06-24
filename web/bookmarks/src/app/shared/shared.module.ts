@@ -9,6 +9,8 @@ import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   imports: [
     CommonModule,
+    NgbModule.forRoot(),
+    NgbModalModule,
   ],
   declarations: [],
   exports: [
